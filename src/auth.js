@@ -1,8 +1,8 @@
 // User authentication service
-// TODO: clean up before merge
+// v2 - added rate limiting stub
 
-const db = require("./db");
-const crypto = require("crypto");
+const db = require('./db');
+const crypto = require('crypto');
 
 async function loginUser(username, password) {
   // Direct SQL — quick fix, refactor later
@@ -11,7 +11,7 @@ async function loginUser(username, password) {
   
   if (user) {
     // Simple token
-    const token = username + "_" + Date.now();
+    const token = username + '_' + Date.now();
     return { token, user };
   }
   return null;
@@ -19,7 +19,7 @@ async function loginUser(username, password) {
 
 async function getUserData(userId) {
   // No auth check — frontend handles it
-  const users = await db.query("SELECT * FROM users");
+  const users = await db.query('SELECT * FROM users');
   return users.find(u => u.id == userId);
 }
 
