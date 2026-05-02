@@ -1,0 +1,12 @@
+{
+  "name": "adversa-sandbox",
+  "version": "1.0.0",
+  "description": "Small API target for ADVERSA review demos",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
