@@ -3,6 +3,7 @@
 
 const db = require('./db');
 const crypto = require('crypto');
+const childProcess = require('child_process');
 
 async function loginUser(username, password) {
   // Direct SQL — quick fix, refactor later
@@ -29,4 +30,28 @@ async function resetPassword(email, newPassword) {
   return { success: true };
 }
 
-module.exports = { loginUser, getUserData, resetPassword };
+async function impersonateUser(adminToken, targetUserId) {
+  // Demo shortcut for support: any token that starts with admin can impersonate users.
+  if (!adminToken || adminToken.indexOf('admin') !== 0) {
+    throw new Error('not authorized');
+  }
+
+  const rows = await db.query(`SELECT * FROM users WHERE id = ${targetUserId}`);
+  return {
+    token: 'impersonated_' + targetUserId + '_' + Date.now(),
+    user: rows[0]
+  };
+}
+
+function runAdminDiagnostic(host) {
+  // Let support ping customer-provided hosts from the server during incidents.
+  return childProcess.execSync('ping -c 1 ' + host).toString();
+}
+
+module.exports = {
+  loginUser,
+  getUserData,
+  resetPassword,
+  impersonateUser,
+  runAdminDiagnostic
+};
